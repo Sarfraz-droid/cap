@@ -1,31 +1,15 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 import Filters from "./components/Filters";
 import Card from "./components/Card";
-import { Grid } from "@mui/material";
-
-const data = {
-  jdUid: "cfff35ac-053c-11ef-83d3-06301d0a7178-92010",
-  jdLink: "https://weekday.works",
-  jobDetailsFromCompany:
-    "This is a sample job and you must have displayed it to understand that its not just some random lorem ipsum text but something which was manually written. Oh well, if random text is what you were looking for then here it is: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages and now in this assignment.",
-  maxJdSalary: 61,
-  minJdSalary: null,
-  salaryCurrencyCode: "USD",
-  location: "delhi ncr",
-  minExp: 3,
-  maxExp: 6,
-  jobRole: "frontend",
-  companyName: "Dropbox",
-  logoUrl: "https://logo.clearbit.com/dropbox.com",
-};
+import { Container, Grid } from "@mui/material";
 
 export interface JDData {
   jdUid: string;
   jdLink: string;
   jobDetailsFromCompany: string;
   maxJdSalary: number;
-  minJdSalary: any;
+  minJdSalary?: number;
   salaryCurrencyCode: string;
   location: string;
   minExp: number;
@@ -36,6 +20,59 @@ export interface JDData {
 }
 
 function App() {
+  const [listData, setListData] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const observer = useRef<IntersectionObserver>();
+  const lastElementRef = useCallback(
+    (ref) => {
+      if (isFetching) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entry) => {
+        if (entry[0].isIntersecting) {
+          setOffset(offset + 1);
+        }
+      });
+
+      if (ref) observer.current.observe(ref);
+    },
+    [isFetching, offset]
+  );
+
+  const fetchDatafromAPI = useCallback(async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const body = JSON.stringify({
+      limit: 12,
+      offset: offset,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body,
+    };
+
+    setIsFetching(true);
+    return fetch(
+      "https://api.weekday.technology/adhoc/getSampleJdJSON",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setListData([...listData, ...result.jdList]);
+        setIsFetching(false);
+      })
+      .catch((error) => console.error(error));
+  }, [listData, offset]);
+
+  useEffect(() => {
+    fetchDatafromAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offset]);
+
   return (
     <React.Fragment>
       <Filters />
@@ -47,11 +84,20 @@ function App() {
           padding: 4,
         }}
       >
-        {Array.from(Array(6)).map((_, index) => (
-          <Grid item xs={2} sm={4} md={4} key={index}>
-            <Card data={data} />
-          </Grid>
-        ))}
+        {listData.map((item, index) => {
+          if (listData.length === index + 1)
+            return (
+              <Grid item xs={2} sm={4} md={4} key={index} ref={lastElementRef}>
+                <Card data={item} />
+              </Grid>
+            );
+
+          return (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <Card data={item} />
+            </Grid>
+          );
+        })}
       </Grid>
     </React.Fragment>
   );

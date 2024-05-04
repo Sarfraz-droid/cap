@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { JDData } from "../App";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import StarIcon from "@mui/icons-material/Star";
 
 const EasyApply = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText("#54efc3"),
@@ -35,15 +37,18 @@ function Card({ data }: { data: JDData }) {
       <Paper
         sx={{
           padding: 2,
+          borderRadius: 5,
         }}
+        elevation={4}
       >
         <Stack spacing={1}>
           <Chip
             label="Posted 10 Days Ago"
             variant="outlined"
             sx={{
-              width: 200,
+              width: 175,
             }}
+            icon={<HourglassEmptyIcon />}
           />
           <Stack direction={"row"}>
             <Avatar
@@ -51,15 +56,15 @@ function Card({ data }: { data: JDData }) {
               src={data.logoUrl}
               sx={{
                 width: 75,
-                height: 100,
-                boxSizing: "border-box",
+                height: 75,
+                objectFit: "cover",
               }}
             />
             <Stack
               sx={{
                 marginLeft: 2,
               }}
-              spacing={1}
+              spacing={0.4}
             >
               <Typography
                 variant="subtitle1"
@@ -139,7 +144,14 @@ function Card({ data }: { data: JDData }) {
               borderRadius: 3,
             }}
           >
-            Easy Apply
+            <StarIcon />
+            <Typography
+              sx={{
+                alignSelf: "center",
+              }}
+            >
+              Easy Apply
+            </Typography>
           </EasyApply>
           <UnlockReferralAds
             sx={{
@@ -149,7 +161,17 @@ function Card({ data }: { data: JDData }) {
               borderRadius: 3,
             }}
           >
-            Unlock Referral Asks
+            <Stack direction={"row"} spacing={1}>
+              <Avatar>A</Avatar>
+              <Avatar>B</Avatar>
+              <Typography
+                sx={{
+                  alignSelf: "center",
+                }}
+              >
+                Unlock Referral Asks
+              </Typography>
+            </Stack>
           </UnlockReferralAds>
         </Stack>
       </Paper>
