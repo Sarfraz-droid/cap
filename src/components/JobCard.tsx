@@ -11,9 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { JDData } from "../App";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import StarIcon from "@mui/icons-material/Star";
+import { IJDData } from "../types/types";
+import { yellow } from "@mui/material/colors";
 
 const EasyApply = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText("#54efc3"),
@@ -31,7 +32,7 @@ const UnlockReferralAds = styled(Button)<ButtonProps>(({ theme }) => ({
   },
 }));
 
-function Card({ data }: { data: JDData }) {
+function JobCard({ data }: { data: IJDData }) {
   return (
     <React.Fragment>
       <Paper
@@ -81,7 +82,7 @@ function Card({ data }: { data: JDData }) {
                   fontSize: 12,
                 }}
               >
-                {data.jobRole}
+                {data.location}
               </Typography>
             </Stack>
           </Stack>
@@ -110,7 +111,7 @@ function Card({ data }: { data: JDData }) {
           </Typography>
           <Typography
             sx={{
-              height: 250,
+              height: 180,
               overflow: "hidden",
               maskImage: "linear-gradient(180deg, #000 60%, transparent)",
             }}
@@ -144,10 +145,17 @@ function Card({ data }: { data: JDData }) {
               borderRadius: 3,
             }}
           >
-            <StarIcon />
+            <StarIcon
+              sx={{
+                color: yellow[600],
+              }}
+            />
             <Typography
               sx={{
                 alignSelf: "center",
+                marginLeft: 1,
+                textTransform: "none",
+                fontWeight: 700,
               }}
             >
               Easy Apply
@@ -162,11 +170,23 @@ function Card({ data }: { data: JDData }) {
             }}
           >
             <Stack direction={"row"} spacing={1}>
-              <Avatar>A</Avatar>
-              <Avatar>B</Avatar>
+              <Avatar
+                src={"https://picsum.photos/200"}
+                sx={{
+                  filter: "blur(2px)",
+                }}
+              />
+              <Avatar
+                src={"https://picsum.photos/200"}
+                sx={{
+                  filter: "blur(2px)",
+                }}
+              />
               <Typography
                 sx={{
                   alignSelf: "center",
+                  textTransform: "none",
+                  fontWeight: 700,
                 }}
               >
                 Unlock Referral Asks
@@ -179,4 +199,4 @@ function Card({ data }: { data: JDData }) {
   );
 }
 
-export default Card;
+export default JobCard;
