@@ -14,13 +14,13 @@ const ListRenderer = React.memo(({ list, lastElementRef }: IProps) => {
       {list.map((item, index) => {
         if (list.length === index + 1)
           return (
-            <Grid item xs={2} sm={4} md={4} key={index} ref={lastElementRef}>
+            <Grid item xs={4} sm={4} md={4} key={index} ref={lastElementRef}>
               <JobCard data={item} />
             </Grid>
           );
 
         return (
-          <Grid item xs={2} sm={4} md={4} key={index}>
+          <Grid item xs={4} sm={4} md={4} key={index}>
             <JobCard data={item} />
           </Grid>
         );

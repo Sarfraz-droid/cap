@@ -1,8 +1,8 @@
 import {
   FormControl,
+  Grid,
   InputLabel,
   Select,
-  Stack,
   TextField,
 } from "@mui/material";
 import React from "react";
@@ -25,35 +25,39 @@ function Filters(props: IProps) {
 
   return (
     <React.Fragment>
-      <Stack direction="row" spacing={1}>
+      <Grid container spacing={1}>
         {formInputData.map((item, index) => (
-          <FormControl fullWidth>
-            <React.Fragment key={index}>
-              <InputLabel id={item.id}>{item.label}</InputLabel>
-              <Select
-                id={item.id}
-                label={item.label}
-                onChange={(e) => {
-                  updateFilter(e.target.value, item.id);
-                }}
-              >
-                <MenuItem value={undefined}>{"Any"}</MenuItem>
-                {item.options.map((item) => {
-                  return <MenuItem value={item.value}>{item.label}</MenuItem>;
-                })}
-              </Select>
-            </React.Fragment>
-          </FormControl>
+          <Grid item xs={6} sm={2}>
+            <FormControl fullWidth>
+              <React.Fragment key={index}>
+                <InputLabel id={item.id}>{item.label}</InputLabel>
+                <Select
+                  id={item.id}
+                  label={item.label}
+                  onChange={(e) => {
+                    updateFilter(e.target.value, item.id);
+                  }}
+                >
+                  <MenuItem value={undefined}>{"Any"}</MenuItem>
+                  {item.options.map((item) => {
+                    return <MenuItem value={item.value}>{item.label}</MenuItem>;
+                  })}
+                </Select>
+              </React.Fragment>
+            </FormControl>
+          </Grid>
         ))}
-        <FormControl fullWidth>
-          <TextField
-            label="Search Company Name"
-            onChange={(e) => {
-              updateFilter(e.target.value, "searchCompanyName");
-            }}
-          />
-        </FormControl>
-      </Stack>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth>
+            <TextField
+              label="Search Company Name"
+              onChange={(e) => {
+                updateFilter(e.target.value, "searchCompanyName");
+              }}
+            />
+          </FormControl>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 }
